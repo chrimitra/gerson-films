@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GERSON FILMS — Filmmaker</title>
+  <meta name="description" content="GERSON FILMS — Filmmaker & Director. Video dinamici con una storia forte al centro." />
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="gerson-films-logo.png">
+  <!-- ===== FONT STILE APPLE =====
+       Su Mac/iPhone si vede il vero font Apple (San Francisco).
+       Su Windows/Android usiamo "Inter", il più simile e gratuito. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font "Cardo" — usato per il sottotitolo della Home -->
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ========================================================
+       COLORI — qui cambi i colori di tutto il sito
+       ======================================================== */
+    :root {
+      --bg: #000000;
+      --surface: #0c0c0d;
+      --text: #f5f5f7;
+      --muted: #86868b;
+      --line: rgba(255,255,255,0.10);
+      --line-strong: rgba(255,255,255,0.22);
+      --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --maxw: 1280px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: #000; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    /* grana sottile sopra tutto (profondità cinema) */
+    body::after {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ========================================================
+       HEADER / NAV
+       ►► MODIFICA: ora la barra NON è più fissa.
+          - position: absolute  -> sta sopra il video iniziale e SCORRE VIA con la pagina
+          - background trasparente -> niente striscia/gap nel notch dell'iPhone
+          Così quando scorri verso il basso la navbar non resta incollata in alto.
+       ======================================================== */
+      header {
+        position: absolute; top: 0; left: 0; right: 0; z-index: 1000;
+        background: transparent;
+        border-bottom: none;
+        padding-top: env(safe-area-inset-top);
+      }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand { font-weight: 700; letter-spacing: 0.02em; font-size: 16px; display: flex; align-items: center; }
+    .brand-logo { height: 18px; width: auto; display: block; }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-links { display: flex; gap: 26px; font-size: 14px; color: var(--muted); }
+    .nav-links a { transition: color .2s ease; }
+    .nav-links a:hover { color: var(--text); }
+    .lang-btn {
+      font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text); background: transparent; cursor: pointer;
+      border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 12px;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--text); }
+    /* hamburger (visibile solo su mobile) */
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 28px; height: 22px; padding: 0; background: transparent; border: none; cursor: pointer; }
+    .hamburger span { display: block; width: 100%; height: 2px; background: var(--text); border-radius: 2px; transition: transform .3s ease, opacity .3s ease; }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ========================================================
+       HERO
+       ======================================================== */
+    .hero {
+      min-height: 100svh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      position: relative; overflow: hidden; padding: 80px 24px 40px;
+    }
+    /* video showreel di sfondo */
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    /* velo scuro sopra il video: tiene il testo leggibile su qualsiasi scena */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.30) 45%, rgba(0,0,0,0.80) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; }
+    /* logo grande al centro (sostituisce la scritta GERSON FILMS) */
+    .hero-logo {
+      width: clamp(320px, 82vw, 1020px); height: auto; margin: 0 auto;
+      opacity: 0; transform: translateY(20px);
+      animation: rise 1s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 11vw, 9rem); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 0.95;
+      opacity: 0; transform: translateY(20px);
+      animation: rise 1s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    .hero .sub {
+      margin-top: 22px;
+      font-family: "Cardo", Georgia, "Times New Roman", serif;
+      font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+      opacity: 0; transform: translateY(20px);
+      animation: rise 1s cubic-bezier(.2,.7,.2,1) .15s forwards;
+    }
+    .hero .cta {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 40px;
+      padding: 13px 30px; border-radius: 999px; background: var(--text); color: #000;
+      font-weight: 600; font-size: 15px;
+      transition: transform .25s ease; opacity: 0;
+      animation: rise 1s cubic-bezier(.2,.7,.2,1) .3s forwards;
+    }
+    .hero .cta:hover { transform: scale(1.04); }
+    .scroll-cue {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 2;
+      color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.2em;
+      animation: bob 2s ease-in-out infinite;
+    }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+    @keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0);} 50% { transform: translateX(-50%) translateY(6px);} }
+
+    /* ========================================================
+       STRISCIA CLIENTI
+       ======================================================== */
+    .clients { padding: 56px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .clients .label {
+      text-align: center; font-size: 12px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+    }
+    .client-row {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 36px 52px; font-size: clamp(15px, 3.5vw, 22px); font-weight: 700;
+      letter-spacing: 0.02em; color: rgba(255,255,255,0.55);
+    }
+    .client-row span { transition: color .25s ease; }
+    .client-row span:hover { color: var(--text); }
+
+    /* ========================================================
+       SEZIONI
+       ======================================================== */
+    section { scroll-margin-top: 60px; }
+    .section-pad { padding: 100px 0; }
+    .eyebrow { font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+    .section-title { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .section-desc { color: var(--muted); font-size: clamp(1rem, 2.5vw, 1.15rem); max-width: 620px; margin-bottom: 48px; }
+
+    /* ========================================================
+       GRIGLIA LAVORI (titolo SOTTO la miniatura, come il riferimento)
+       ======================================================== */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 28px 22px; }
+    .work-item { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+    .work-item.in { opacity: 1; transform: translateY(0); }
+    .thumb {
+      position: relative; width: 100%; border: none; padding: 0; cursor: pointer;
+      border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9;
+      background-image: linear-gradient(135deg, #161616 0%, #050505 100%);
+      transition: transform .35s cubic-bezier(.2,.7,.2,1);
+    }
+    .thumb:hover { transform: translateY(-3px); }
+    .thumb-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    /* effetto "Ken Burns": lento zoom + panoramica al passaggio del mouse (nessun file extra) */
+    .thumb:hover .thumb-img { animation: kenburns 6s ease-out forwards; }
+    @keyframes kenburns { from { transform: scale(1.05); } to { transform: scale(1.14) translate(-1.5%, -1.5%); } }
+    /* velo cinematografico che si schiarisce in hover */
+    .thumb::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0) 55%); transition: opacity .4s ease; }
+    .thumb:hover::after { opacity: 0.15; }
+    .thumb-play {
+      position: absolute; top: 50%; left: 50%; z-index: 2; transform: translate(-50%, -50%) scale(0.8);
+      width: 58px; height: 58px; border-radius: 50%;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s ease, transform .3s ease;
+    }
+    .thumb-play::after { content: ""; border-left: 16px solid var(--text); border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
+    .thumb:hover .thumb-play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    /* CURSORE "PLAY" personalizzato (solo desktop con mouse) */
+    #cursorPlay {
+      position: fixed; top: 0; left: 0; z-index: 3000; pointer-events: none;
+      width: 74px; height: 74px; border-radius: 50%;
+      background: rgba(255,255,255,0.10); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.55); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translate(-100px, -100px); transition: opacity .2s ease;
+    }
+    #cursorPlay.show { opacity: 1; }
+    @media (pointer: fine) {
+      .thumb { cursor: none; }
+      .thumb:hover .thumb-play { opacity: 0; } /* su desktop usiamo il cursore PLAY */
+    }
+    .work-caption { margin-top: 14px; font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+
+    /* ========================================================
+       MARQUEE (striscia di testo scorrevole tra le sezioni)
+       ======================================================== */
+    .marquee { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 22px 0; white-space: nowrap; }
+    .marquee-track { display: inline-flex; will-change: transform; animation: marquee 30s linear infinite; }
+    .marquee-track span {
+      font-size: clamp(1.1rem, 3vw, 1.9rem); font-weight: 800; letter-spacing: -0.01em;
+      text-transform: uppercase; color: rgba(255,255,255,0.16); padding: 0;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* ========================================================
+       CARD "SU COSA STO LAVORANDO"
+       ======================================================== */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform .3s ease, border-color .3s ease;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+    .card-media { aspect-ratio: 16 / 10; background-image: linear-gradient(135deg, #1c1c1f 0%, #060606 100%); }
+    .card-body { padding: 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card-tag { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .card-title { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .card-desc { color: var(--muted); font-size: 0.98rem; flex: 1; }
+    .card-cta { margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--text); }
+    .card-cta span { transition: margin-left .2s ease; }
+    .card:hover .card-cta span { margin-left: 6px; }
+
+    /* ========================================================
+       ABOUT
+       ======================================================== */
+    .about-name { font-size: clamp(1.15rem, 3vw, 1.5rem); font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin: 6px 0 20px; }
+    .about-text p { color: var(--muted); font-size: clamp(1rem, 2.3vw, 1.12rem); max-width: 720px; }
+    .about-text p + p { margin-top: 16px; }
+    /* comparsa progressiva del testo "Chi sono" allo scroll */
+    .about-text > * { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .about-text > *.in { opacity: 1; transform: none; }
+
+    /* ========================================================
+       CONTATTI
+       ======================================================== */
+    .contact { border-top: 1px solid var(--line); }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; }
+    .contact-block .k { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .contact-block a, .contact-block .v {
+      display: block; font-size: clamp(1.05rem, 3vw, 1.4rem); font-weight: 600;
+      letter-spacing: -0.01em; transition: opacity .2s ease;
+    }
+    .contact-block a:hover { opacity: 0.6; }
+    .contact-block a + a { margin-top: 8px; }
+
+    /* ========================================================
+       FOOTER (ricco, come il riferimento)
+       ======================================================== */
+    footer { border-top: 1px solid var(--line); padding: 70px 0 36px; }
+    .footer-brand { font-size: clamp(2rem, 8vw, 4rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 50px; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 40px; }
+    .fcol h4 { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .fcol a, .fcol p { display: block; color: var(--text); font-size: 15px; margin-bottom: 10px; transition: opacity .2s ease; }
+    .fcol a:hover { opacity: 0.6; }
+    .news-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .news-row input {
+      flex: 1; min-width: 150px; background: transparent; border: 1px solid var(--line-strong);
+      border-radius: 999px; padding: 10px 16px; color: var(--text); font-family: inherit; font-size: 14px;
+    }
+    .news-row input::placeholder { color: var(--muted); }
+    .news-row button {
+      background: var(--text); color: #000; border: none; border-radius: 999px;
+      padding: 10px 20px; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: transform .2s ease;
+    }
+    .news-row button:hover { transform: scale(1.04); }
+    .news-msg { color: var(--muted); font-size: 13px; margin-top: 10px; min-height: 16px; }
+    .foot-bottom { margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: var(--muted); font-size: 13px; }
+
+    /* ABOUT con ritratto (stile pagina contatti del riferimento) */
+    .about-grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: center; }
+    .about-portrait { aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background-image: linear-gradient(135deg, #1c1c1f 0%, #060606 100%); }
+    .about-portrait img { width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 760px) { .about-grid2 { grid-template-columns: 1fr; } }
+
+    /* GET IN TOUCH — lista link grande */
+    .git-desc { color: var(--muted); font-size: clamp(1.05rem, 3vw, 1.5rem); max-width: 600px; line-height: 1.45; margin-bottom: 36px; }
+    .git-links { display: flex; flex-direction: column; align-items: flex-start; }
+    .git-links a {
+      font-size: clamp(1.05rem, 4vw, 1.3rem); font-weight: 700; letter-spacing: -0.02em;
+      text-transform: uppercase; padding: 8px 0; transition: opacity .2s ease, transform .2s ease;
+    }
+    .git-links a:hover { opacity: 0.55; transform: translateX(8px); }
+
+    /* FORM DI CONTATTO */
+    .contact-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    @media (max-width: 820px) { .contact-cols { grid-template-columns: 1fr; gap: 48px; } }
+    .contact-form { display: flex; flex-direction: column; gap: 14px; max-width: 460px; }
+    .contact-form input, .contact-form textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--line-strong);
+      border-radius: 12px; padding: 14px 16px; color: var(--text); font-family: inherit; font-size: 15px;
+      transition: border-color .2s ease;
+    }
+    .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--text); }
+    .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--muted); }
+    .contact-form textarea { resize: vertical; min-height: 120px; }
+    .contact-form button {
+      align-self: flex-start; background: var(--text); color: #000; border: none; border-radius: 999px;
+      padding: 13px 32px; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer;
+      transition: transform .2s ease;
+    }
+    .contact-form button:hover { transform: scale(1.04); }
+    .contact-form button:disabled { opacity: 0.5; cursor: default; transform: none; }
+    .form-msg { color: var(--muted); font-size: 14px; min-height: 18px; }
+
+    /* ========================================================
+       GALLERIA FOTO + LIGHTBOX IMMAGINI
+       ======================================================== */
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+    .photo {
+      position: relative; border: none; padding: 0; cursor: pointer;
+      border-radius: 12px; overflow: hidden; aspect-ratio: 3 / 2;
+      background-image: linear-gradient(135deg, #161616 0%, #050505 100%);
+      opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .photo.in { opacity: 1; transform: translateY(0); }
+    .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .photo:hover img { transform: scale(1.05); }
+
+    .lightbox { position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); padding: 24px; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 86vh; border-radius: 10px; object-fit: contain; }
+
+    /* ========================================================
+       MODALE VIDEO (carousel)
+       ======================================================== */
+    .modal { position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); padding: 24px; }
+    .modal.open { display: flex; }
+    .modal-stage { width: 100%; max-width: 1100px; }
+    .modal-title { font-size: 14px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); margin-bottom: 14px; }
+    .modal-frame { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; }
+    .modal-frame iframe { width: 100%; height: 100%; border: 0; }
+    /* video verticale (formato reel 9:16) */
+    .modal-stage.vertical .modal-title { text-align: center; }
+    .modal-stage.vertical .modal-frame { width: auto; height: min(78vh, 720px); aspect-ratio: 9 / 16; margin: 0 auto; }
+    .modal-close {
+      position: absolute; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1px solid var(--line-strong); color: var(--text);
+      font-size: 24px; cursor: pointer; line-height: 1;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.2); }
+    /* frecce avanti/indietro */
+    .modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); border: 1px solid var(--line-strong);
+      color: var(--text); font-size: 30px; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: background .2s ease;
+    }
+    .modal-nav:hover { background: rgba(255,255,255,0.22); }
+    .modal-prev { left: 18px; }
+    .modal-next { right: 18px; }
+    @media (max-width: 600px) { .modal-nav { width: 42px; height: 42px; font-size: 24px; } .modal-prev { left: 6px; } .modal-next { right: 6px; } }
+
+    /* ========================================================
+       PULSANTE WHATSAPP (fisso in basso a destra)
+       ======================================================== */
+    .wa-fab {
+      position: fixed; right: 22px; bottom: 22px; z-index: 1500;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #25D366; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .wa-fab:hover { transform: scale(1.08); box-shadow: 0 10px 26px rgba(37,211,102,0.45); }
+    .wa-fab svg { width: 32px; height: 32px; display: block; }
+    @media (max-width: 600px) { .wa-fab { right: 16px; bottom: 16px; width: 54px; height: 54px; } }
+
+    /* ========================================================
+   SIDEBAR MOBILE
+   ======================================================== */
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1600;
+    background: rgba(0,0,0,0.60); backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .sidebar-overlay.open { display: block; opacity: 1; }
+
+  .sidebar {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 1601;
+    width: 280px; background: #0c0c0d;
+    border-left: 1px solid rgba(255,255,255,0.10);
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.25,.8,.25,1);
+    display: flex; flex-direction: column; padding: 80px 36px 48px;
+  }
+  .sidebar.open { transform: translateX(0); }
+  /* pulsante X per chiudere il menu (in alto a destra dentro al pannello) */
+  .sidebar-close {
+    position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    color: #f5f5f7; font-size: 24px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s ease;
+  }
+  .sidebar-close:hover { background: rgba(255,255,255,0.18); }
+  .sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+  .sidebar-links a {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+    color: rgba(255,255,255,0.85); padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: color .2s ease, padding-left .2s ease;
+  }
+  .sidebar-links a:hover { color: #f5f5f7; padding-left: 6px; }
+  .sidebar-footer { margin-top: auto; font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 0.05em; }
+
+  @media (max-width: 760px) {
+    .hamburger { display: flex; }
+    .nav-links { display: none; } /* nasconde il vecchio menu desktop */
+    .section-pad { padding: 70px 0; }
+    .hero .sub { font-size: 0.72rem; letter-spacing: 0.16em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .work-item, .photo, .about-text > * { opacity: 1; transform: none; }
+  }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="wrap nav">
+      <!-- LOGO: metti il tuo file "logo.png" nella cartella del sito.
+           Meglio un PNG con sfondo trasparente e logo chiaro (si vede su nero).
+           Se il file non c'è, compare la scritta GERSON FILMS. -->
+      <a class="brand" href="#top">
+        <img class="brand-logo" src="gerson-films-logo.png" alt="GERSON FILMS"
+             onerror="this.style.display='none'; document.getElementById('brandText').style.display='inline';" />
+        <span class="brand-text" id="brandText" style="display:none;">GERSON FILMS</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" id="navLinks">
+          <a href="#top" data-i18n="nav.home">Home</a>
+          <a href="#servizi" data-i18n="nav.services">Servizi</a>
+          <a href="#contatti" data-i18n="nav.contact">Contatti</a>
+        </nav>
+        <!-- PULSANTE LINGUA -->
+        <button class="lang-btn" id="langBtn">EN</button>
+        <!-- HAMBURGER (solo mobile) -->
+        <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar" aria-label="Menu mobile">
+    <button class="sidebar-close" id="sidebarClose" aria-label="Chiudi menu">&times;</button>
+    <div class="sidebar-links">
+      <a href="#top"      data-i18n="nav.home">Home</a>
+      <a href="#servizi"  data-i18n="nav.services">Servizi</a>
+      <a href="#contatti" data-i18n="nav.contact">Contatti</a>
+    </div>
+    <div class="sidebar-footer">GERSON FILMS</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <!-- VIDEO DI SFONDO (showreel)
+         Metti il tuo video nella STESSA cartella di index.html, chiamato "hero.mp4".
+         Se il file non c'è, lo sfondo resta nero (nessun errore).
+         Consiglio: clip breve (10-20s), compressa, senza audio. -->
+    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="https://media.gersonfilms.com/sharpenizzato%20.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <!-- LOGO al centro (sostituisce la vecchia scritta GERSON FILMS).
+           Usa lo stesso file "gerson-film-logo.png". Se manca, compare la scritta. -->
+      <img class="hero-logo" src="gerson-films-logo.png" alt="GERSON FILMS"
+           onerror="this.style.display='none'; document.getElementById('heroText').style.display='block';" />
+      <h1 id="heroText" style="display:none;">GERSON FILMS</h1>
+      <p class="sub" data-i18n="hero.sub">Filmmaker — Based in Milan, Italy</p>
+      <a class="cta" href="#lavori"><span data-i18n="hero.cta">Guarda i lavori</span> →</a>
+    </div>
+    <div class="scroll-cue"><span data-i18n="hero.scroll">Scorri</span> ↓</div>
+  </section>
+
+  <!-- CLIENTI -->
+  <!--<section class="clients">
+    <div class="wrap">
+      <div class="label" data-i18n="clients.label">Hanno scelto i miei video</div>
+      <div class="client-row">
+        <span>CLIENTE 1</span>
+        <span>CLIENTE 2</span>
+        <span>CLIENTE 3</span>
+        <span>CLIENTE 4</span>
+        <span>CLIENTE 5</span>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- MARQUEE (striscia scorrevole) -->
+
+
+  <!-- LAVORI -->
+  <section class="section-pad" id="lavori">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="work.label">Motion</p>
+      <h2 class="section-title" data-i18n="work.title">Lavori</h2>
+      <p class="section-desc" data-i18n="work.desc">Una selezione di film, spot e video musicali.</p>
+      <div class="grid" id="grid"><!-- riempito dal JavaScript --></div>
+    </div>
+  </section>
+
+  <!-- FOTO -->
+  <section class="section-pad" id="foto">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="photo.label">Stills</p>
+      <h2 class="section-title" data-i18n="photo.title">Foto</h2>
+      <p class="section-desc" data-i18n="photo.desc">Una selezione di scatti e fermi immagine.</p>
+      <div class="photo-grid" id="photoGrid"><!-- riempito dal JavaScript --></div>
+    </div>
+  </section>
+
+  <!-- SU COSA STO LAVORANDO -->
+  <section class="section-pad" id="servizi">
+    <div class="wrap">
+      <h2 class="section-title" data-i18n="services.title">Su cosa sto lavorando</h2>
+      <p class="section-desc" data-i18n="services.desc">Servizi, prodotti e contenuti esclusivi.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-media"><img src="stills/foto8.png" alt="Produzione Video"
+       style="width:100%; height:100%; object-fit:cover; display:block;" /></div>
+          <div class="card-body">
+            <span class="card-tag" data-i18n="card1.tag">Servizi</span>
+            <h3 class="card-title" data-i18n="card1.title">Produzione Video</h3>
+            <p class="card-desc" data-i18n="card1.desc">Dallo storyboard al color grading finale, seguo ogni fase.</p>
+            <a class="card-cta" href="#contatti"><span data-i18n="card1.cta">Scopri</span> →</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-media"><img src="stills/foto7.png" alt="Produzione Video"
+       style="width:100%; height:100%; object-fit:cover; display:block;" /></div>
+          <div class="card-body">
+            <span class="card-tag" data-i18n="card3.tag">Collaborazioni</span>
+            <h3 class="card-title" data-i18n="card3.title">Lavoriamo insieme</h3>
+            <p class="card-desc" data-i18n="card3.desc">Raccontami il tuo progetto e troviamo la soluzione giusta.</p>
+            <a class="card-cta" href="#contatti"><span data-i18n="card3.cta">Scrivimi</span> →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section-pad" id="about">
+    <div class="wrap about-grid2">
+      <div class="about-text">
+        <h2 class="section-title" data-i18n="about.title">Chi sono</h2>
+        <p class="about-name" data-i18n="about.name">Gerson Miranda — Videografo &amp; Filmmaker</p>
+        <p data-i18n="about.p1">Da oltre 5 anni trasformo idee, emozioni e momenti in racconti visivi autentici. Sono Gerson Miranda, videografo e filmmaker con base a Milano, di origini filippine, cresciuto e formato professionalmente in una delle città più dinamiche d'Europa.</p>
+        <p data-i18n="about.p2">Credo che un video non debba limitarsi a mostrare qualcosa, ma debba far provare qualcosa. Per questo motivo, in ogni progetto metto al centro la narrazione, le emozioni e l'uso creativo del colore, elementi che rendono ogni storia unica e memorabile. Il mio obiettivo è creare contenuti capaci di coinvolgere il pubblico e lasciare un'impressione duratura.</p>
+        <p data-i18n="about.p3">Collaboro con brand, aziende, artisti, attività locali e privati, seguendo ogni fase della produzione video: dall'ideazione alla ripresa, fino al montaggio e al color grading finale. Ogni dettaglio viene curato con attenzione per garantire un risultato professionale e di alta qualità.</p>
+        <p data-i18n="about.p4">Anche se lavoro principalmente a Milano, sono disponibile a spostarmi in tutta Italia e all'estero per nuovi progetti e collaborazioni.</p>
+        <p data-i18n="about.p5">Se hai un'idea da realizzare, un evento da raccontare o un brand da valorizzare attraverso il video, sarò felice di ascoltarti. Puoi contattarmi direttamente tramite questo sito oppure attraverso i miei canali social. Insieme possiamo trasformare la tua visione in una storia che merita di essere raccontata.</p>
+      </div>
+      <!-- RITRATTO: metti la tua foto "portrait.jpg" nella cartella del sito.
+           Se non c'è, resta un riquadro scuro (nessun errore). -->
+      <div class="about-portrait">
+        <img src="gerson-films-profile.jpg" alt="Gerson" onerror="this.style.display='none'" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATTI (stile "Get in touch" del riferimento) -->
+  <section class="section-pad contact" id="contatti">
+    <div class="wrap">
+      <h2 class="section-title" data-i18n="git.title">Mettiti in contatto</h2>
+      <p class="git-desc" data-i18n="git.desc">Non esitare a scrivermi, se vuoi lavorare insieme o per qualsiasi domanda.</p>
+      <div class="contact-cols">
+        <!-- FORM DI CONTATTO (invia email tramite Web3Forms)
+             IMPORTANTE: vai su https://web3forms.com, inserisci la tua email,
+             ricevi una "Access Key" e incollala qui sotto al posto di INCOLLA-QUI-LA-TUA-ACCESS-KEY -->
+        <form class="contact-form" id="contactForm">
+          <input type="hidden" name="access_key" value="1fab39a5-b668-4ad8-9eae-f11a461e1666" />
+          <input type="hidden" name="subject" value="Nuovo messaggio dal sito GERSON FILMS" />
+          <input type="text" name="name" required placeholder="Nome" data-i18n-ph="form.name" />
+          <input type="email" name="email" required placeholder="Email" data-i18n-ph="form.email" />
+          <textarea name="message" required placeholder="Il tuo messaggio" data-i18n-ph="form.message"></textarea>
+          <button type="submit" id="formBtn" data-i18n="form.send">Invia</button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+        <!-- Link diretti -->
+        <div class="git-links">
+          <a href="mailto:gersonmiranda.films@gmail.com"><span data-i18n="git.business">Lavoro</span> — GERSONMIRANDA.FILMS@GMAIL.COM</a>
+          <a href="https://www.instagram.com/gersonmiranda.films/" target="_blank" rel="noopener">INSTAGRAM — @GERSONMIRANDA.FILMS</a>
+          <a href="https://www.youtube.com/@GersonMirandaFilms" target="_blank" rel="noopener">YOUTUBE — GERSON MIRANDA FILMS</a>
+          <a href="https://www.facebook.com/gerson.miranda.161" target="_blank" rel="noopener">FACEBOOK — GERSON MIRANDA</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-brand">GERSON FILMS</div>
+      <div class="footer-grid">
+        <div class="fcol">
+          <h4 data-i18n="foot.contact">Contatti</h4>
+          <a href="mailto:gersonmiranda.films@gmail.com">gersonmiranda.films@gmail.com</a>
+        </div>
+        <div class="fcol">
+          <h4 data-i18n="foot.links">Link</h4>
+          <a href="https://www.instagram.com/gersonmiranda.films?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.youtube.com/@GersonMirandaFilms" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://www.facebook.com/gerson.miranda.161" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="fcol">
+          <h4 data-i18n="foot.legal">Legale</h4>
+          <a href="#" data-i18n="legal.terms">Termini e condizioni</a>
+          <a href="#" data-i18n="legal.privacy">Privacy</a>
+        </div>
+        
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> GERSON FILMS</span>
+        <span data-i18n="foot.rights">Tutti i diritti riservati</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       PULSANTE WHATSAPP
+       ►► IMPORTANTE: sostituisci 39XXXXXXXXXX con il TUO numero
+          in formato internazionale, SENZA + e SENZA spazi.
+          Esempio: per +39 333 123 4567  ->  393331234567
+       Il testo dopo "text=" è il messaggio già pronto (modificabile).
+       ============================================================ -->
+  <a class="wa-fab"
+     href="https://wa.me/393516231238?text=Ciao%20Gerson%2C%20ti%20scrivo%20dal%20tuo%20sito%20GERSON%20FILMS"
+     target="_blank" rel="noopener" aria-label="Scrivimi su WhatsApp" title="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+  </a>
+
+  <!-- LIGHTBOX IMMAGINI -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="modal-close" id="lbClose" aria-label="Chiudi">&times;</button>
+    <button class="modal-nav modal-prev" id="lbPrev" aria-label="Precedente">&#8249;</button>
+    <button class="modal-nav modal-next" id="lbNext" aria-label="Successivo">&#8250;</button>
+    <img id="lbImg" src="" alt="" />
+  </div>
+
+  <!-- MODALE VIDEO (carousel) -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <button class="modal-close" id="modalClose" aria-label="Chiudi">&times;</button>
+    <button class="modal-nav modal-prev" id="modalPrev" aria-label="Precedente">&#8249;</button>
+    <button class="modal-nav modal-next" id="modalNext" aria-label="Successivo">&#8250;</button>
+    <div class="modal-stage">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-frame" id="modalFrame"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       ▼▼▼  ELENCO VIDEO  ▼▼▼
+       Ogni video può essere YouTube OPPURE Vimeo. Aggiungi "vertical: true"
+       per i video in piedi (formato reel 9:16).
+
+       YouTube:  youtube: "CODICE"   (la parte dopo v= o youtu.be/)
+       Vimeo:    vimeo:   "CODICE"   (il numero nel link, es. vimeo.com/769162295 -> "769162295")
+
+       ►► COPERTINA PERSONALIZZATA (al posto della miniatura di YouTube):
+          aggiungi  cover: "covers/nome.jpg"  con il percorso della TUA immagine.
+          Consiglio: immagine 16:9 (es. 1280x720) messa in una cartella "covers".
+          Se "cover" non c'è, viene usata in automatico la miniatura di YouTube.
+
+       Esempi:
+         { titolo: "Spot",  youtube: "dQw4w9WgXcQ" },
+         { titolo: "Spot",  youtube: "dQw4w9WgXcQ", cover: "covers/spot.jpg" },
+         { titolo: "Reel",  vimeo: "769162295", vertical: true, cover: "covers/reel.jpg" },
+       Lascia youtube: "" se non hai ancora il video.
+       ============================================================ */
+    
+    const VIDEOS = [
+      { titolo: "JOSHUA AND SHEILA WEDDING",        youtube: "-uUdfGCIZyY" },
+      { titolo: "WHAT IF | MUSIC VIDEO",    youtube: "ylgK3BXCj9Y", cover: "covers/what-if.png"},
+      { titolo: "PARA SIEMPRE | MUSIC VIDEO",       youtube: "KeReHKwHBM4" ,  cover: "covers/para-siempre.png"},
+      { titolo: "DOLOMITES CINEMATIC DRONE SHOT",           youtube: "Fm_--n2eJw4" },
+      { titolo: "KUSINELA RESTAURANT | PROMOTIONAL VIDEO",  youtube: "yKxxIWSEpbI", vertical: true, cover: "covers/kusinela.png"},
+      { titolo: "LUNCH BREAK | SHORT REEL ",       youtube: "Eb0JsQJJ0BQ" },
+    ];
+    /* ▲▲▲  fine elenco video  ▲▲▲ */
+
+
+    /* ============================================================
+       ▼▼▼  TRADUZIONI IT / EN  ▼▼▼
+       Per cambiare un testo, modifica il valore nella lingua giusta.
+       ============================================================ */
+    const I18N = {
+      it: {
+        "nav.home": "Home", "nav.work": "Lavori", "nav.services": "Servizi", "nav.contact": "Contatti",
+        "hero.sub": "Filmmaker — Based in Milan, Italy", "hero.cta": "Guarda i lavori", "hero.scroll": "Scorri",
+        "clients.label": "Hanno scelto i miei video",
+        "work.label": "Motion", "work.title": "Lavori", "work.desc": "Una selezione di film, spot e video musicali.",
+        "photo.label": "Stills", "photo.title": "Foto", "photo.desc": "Una selezione di scatti e fermi immagine.",
+        "services.title": "Su cosa sto lavorando", "services.desc": "Servizi, prodotti e contenuti esclusivi.",
+        "card1.tag": "Servizi", "card1.title": "Produzione Video", "card1.desc": "Dallo storyboard al color grading finale, seguo ogni fase.", "card1.cta": "Scopri",
+        "card2.tag": "Store", "card2.title": "Preset & LUTs", "card2.desc": "I miei preset per dare un tocco cinematografico ai tuoi video.", "card2.cta": "Scopri",
+        "card3.tag": "Collaborazioni", "card3.title": "Lavoriamo insieme", "card3.desc": "Raccontami il tuo progetto e troviamo la soluzione giusta.", "card3.cta": "Scrivimi",
+        "about.title": "Chi sono",
+        "about.name": "Gerson Miranda — Videografo & Filmmaker",
+        "about.p1": "Da oltre 5 anni trasformo idee, emozioni e momenti in racconti visivi autentici. Sono Gerson Miranda, videografo e filmmaker con base a Milano, di origini filippine, cresciuto e formato professionalmente in una delle città più dinamiche d'Europa.",
+        "about.p2": "Credo che un video non debba limitarsi a mostrare qualcosa, ma debba far provare qualcosa. Per questo motivo, in ogni progetto metto al centro la narrazione, le emozioni e l'uso creativo del colore, elementi che rendono ogni storia unica e memorabile. Il mio obiettivo è creare contenuti capaci di coinvolgere il pubblico e lasciare un'impressione duratura.",
+        "about.p3": "Collaboro con brand, aziende, artisti, attività locali e privati, seguendo ogni fase della produzione video: dall'ideazione alla ripresa, fino al montaggio e al color grading finale. Ogni dettaglio viene curato con attenzione per garantire un risultato professionale e di alta qualità.",
+        "about.p4": "Anche se lavoro principalmente a Milano, sono disponibile a spostarmi in tutta Italia e all'estero per nuovi progetti e collaborazioni.",
+        "about.p5": "Se hai un'idea da realizzare, un evento da raccontare o un brand da valorizzare attraverso il video, sarò felice di ascoltarti. Puoi contattarmi direttamente tramite questo sito oppure attraverso i miei canali social. Insieme possiamo trasformare la tua visione in una storia che merita di essere raccontata.",
+        "contact.title": "Contatti", "contact.desc": "Hai un progetto in mente? Scrivimi.",
+        "contact.k1": "Lavoro / Collaborazioni", "contact.k2": "Social", "contact.k3": "Base", "contact.base": "Milano — Worldwide",
+        "git.title": "Mettiti in contatto", "git.desc": "Non esitare a scrivermi, se vuoi lavorare insieme o per qualsiasi domanda.", "git.support": "Supporto", "git.business": "Lavoro",
+        "form.name": "Nome", "form.email": "Email", "form.message": "Il tuo messaggio", "form.send": "Invia",
+        "form.sending": "Invio in corso…", "form.ok": "Messaggio inviato, grazie!", "form.err": "Qualcosa è andato storto. Riprova o scrivimi via email.",
+        "foot.contact": "Contatti", "foot.links": "Link", "foot.legal": "Legale",
+        "legal.terms": "Termini e condizioni", "legal.privacy": "Privacy",
+        "news.title": "Newsletter", "news.desc": "Sii il primo a sapere di nuovi lavori e contenuti esclusivi.",
+        "news.ph": "La tua email", "news.btn": "Iscriviti", "news.thanks": "Grazie per l'iscrizione!", "news.invalid": "Inserisci un'email valida.",
+        "foot.rights": "Tutti i diritti riservati"
+      },
+      en: {
+        "nav.home": "Home", "nav.work": "Work", "nav.services": "Services", "nav.contact": "Contact",
+        "hero.sub": "Filmmaker — Based in Milan, Italy", "hero.cta": "View work", "hero.scroll": "Scroll",
+        "clients.label": "Trusted by",
+        "work.label": "Motion", "work.title": "Work", "work.desc": "A selection of films, commercials and music videos.",
+        "photo.label": "Stills", "photo.title": "Photos", "photo.desc": "A selection of stills and photography.",
+        "services.title": "What I'm working on", "services.desc": "Services, products and exclusive content.",
+        "card1.tag": "Services", "card1.title": "Video Production", "card1.desc": "From storyboard to final color grading, I handle every step.", "card1.cta": "Discover",
+        "card2.tag": "Store", "card2.title": "Presets & LUTs", "card2.desc": "My presets to give your videos a cinematic touch.", "card2.cta": "Discover",
+        "card3.tag": "Collaborations", "card3.title": "Let's work together", "card3.desc": "Tell me about your project and we'll find the right fit.", "card3.cta": "Get in touch",
+        "about.title": "About",
+        "about.name": "Gerson Miranda — Videographer & Filmmaker",
+        "about.p1": "With over 5 years of experience, I help transform ideas, emotions, and moments into compelling visual stories. My name is Gerson Miranda, a videographer and filmmaker based in Milan, with Filipino roots and a passion for creating meaningful cinematic content.",
+        "about.p2": "I believe that great videos do more than showcase a subject—they create a feeling. That's why storytelling, emotion, and color are at the heart of every project I produce. Whether it's a commercial, a brand film, a social media campaign, or a personal story, my goal is to create visuals that connect with audiences and leave a lasting impact.",
+        "about.p3": "I work with brands, businesses, artists, entrepreneurs, and individuals, managing every stage of the production process—from concept development and filming to editing and professional color grading. Every project receives the same attention to detail and commitment to quality, ensuring a final result that is both visually striking and emotionally engaging.",
+        "about.p4": "Although I am based in Milan, I am available to travel throughout Italy and internationally for creative projects and collaborations.",
+        "about.p5": "If you're looking to bring an idea to life, promote your brand, or tell a story through powerful visuals, I would love to hear from you. Feel free to contact me directly through this website or connect with me on social media.",
+        "contact.title": "Contact", "contact.desc": "Got a project in mind? Get in touch.",
+        "contact.k1": "Business / Collaborations", "contact.k2": "Social", "contact.k3": "Based in", "contact.base": "Milan — Worldwide",
+        "git.title": "Get in touch", "git.desc": "Don't hesitate to reach out, if you'd like to work together or if you have any other questions.", "git.support": "Support", "git.business": "Business",
+        "form.name": "Name", "form.email": "Email", "form.message": "Your message", "form.send": "Send",
+        "form.sending": "Sending…", "form.ok": "Message sent, thank you!", "form.err": "Something went wrong. Please try again or email me.",
+        "foot.contact": "Contact", "foot.links": "Links", "foot.legal": "Legal",
+        "legal.terms": "Terms & Conditions", "legal.privacy": "Privacy",
+        "news.title": "Newsletter", "news.desc": "Be the first to know about new work and exclusive content.",
+        "news.ph": "Your email", "news.btn": "Sign up", "news.thanks": "Thanks for subscribing!", "news.invalid": "Please enter a valid email.",
+        "foot.rights": "All rights reserved"
+      }
+    };
+    /* ▲▲▲  fine traduzioni  ▲▲▲ */
+
+
+    // --- Sistema lingua ---
+    let lang = "it"; // lingua iniziale
+    function applyLang(l) {
+      lang = l;
+      document.documentElement.lang = l;
+      // testi
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[l][key] !== undefined) el.textContent = I18N[l][key];
+      });
+      // placeholder dei campi (es. email newsletter)
+      document.querySelectorAll("[data-i18n-ph]").forEach(function (el) {
+        const key = el.getAttribute("data-i18n-ph");
+        if (I18N[l][key] !== undefined) el.placeholder = I18N[l][key];
+      });
+      // il pulsante mostra l'ALTRA lingua
+      document.getElementById("langBtn").textContent = (l === "it") ? "EN" : "IT";
+    }
+    document.getElementById("langBtn").addEventListener("click", function () {
+      applyLang(lang === "it" ? "en" : "it");
+    });
+
+    // --- Solo i video con un codice (YouTube o Vimeo) entrano nel carousel ---
+    const playable = VIDEOS.filter(function (v) { return v.youtube || v.vimeo; });
+
+    // --- Disegna la griglia lavori ---
+    const grid = document.getElementById("grid");
+    VIDEOS.forEach(function (v) {
+      const item = document.createElement("div");
+      item.className = "work-item";
+
+      const thumb = document.createElement("button");
+      thumb.className = "thumb";
+
+      if (v.youtube || v.vimeo) {
+        const img = document.createElement("img");
+        img.className = "thumb-img";
+        img.loading = "lazy";
+        img.alt = v.titolo;
+
+        if (v.cover) {
+          // COPERTINA PERSONALIZZATA: usa l'immagine indicata in "cover".
+          img.src = v.cover;
+          img.onerror = function () { this.style.display = "none"; };
+        } else if (v.youtube) {
+          // altrimenti miniatura automatica di YouTube
+          img.src = "https://img.youtube.com/vi/" + v.youtube + "/maxresdefault.jpg";
+          img.onerror = function () { this.onerror = null; this.src = "https://img.youtube.com/vi/" + v.youtube + "/hqdefault.jpg"; };
+        } else {
+          // miniatura Vimeo tramite vumbnail.com; se fallisce resta il riquadro scuro
+          img.src = "https://vumbnail.com/" + v.vimeo + ".jpg";
+          img.onerror = function () { this.style.display = "none"; };
+        }
+        thumb.appendChild(img);
+        const idx = playable.indexOf(v);
+        thumb.addEventListener("click", function () { openModalAt(idx); });
+      } else {
+        thumb.style.cursor = "default"; // segnaposto senza video
+      }
+
+      const play = document.createElement("div");
+      play.className = "thumb-play";
+      thumb.appendChild(play);
+
+      const cap = document.createElement("div");
+      cap.className = "work-caption";
+      cap.textContent = v.titolo;
+
+      item.appendChild(thumb);
+      item.appendChild(cap);
+      grid.appendChild(item);
+    });
+
+    /* ▼▼▼  ELENCO FOTO  ▼▼▼
+       Metti i file immagine nella cartella del sito e scrivi qui i nomi.
+       Es: "foto1.jpg". Lascia l'elenco vuoto [] se non hai foto. */
+    const PHOTOS = ["stills/foto1.png", "stills/foto2.jpg", "stills/foto3.png", "stills/foto4.png", "stills/foto5.png", "stills/foto6.png"];
+    /* ▲▲▲  fine elenco foto  ▲▲▲ */
+
+    // --- Disegna la galleria foto ---
+    const photoGrid = document.getElementById("photoGrid");
+    PHOTOS.forEach(function (src, i) {
+      const cell = document.createElement("button");
+      cell.className = "photo";
+      const img = document.createElement("img");
+      img.loading = "lazy"; img.alt = "Foto " + (i + 1); img.src = src;
+      img.onerror = function () { this.style.display = "none"; }; // se manca, resta il riquadro scuro
+      cell.appendChild(img);
+      cell.addEventListener("click", function () { openLightbox(i); });
+      photoGrid.appendChild(cell);
+    });
+
+    // --- Lightbox immagini (apri/chiudi + frecce) ---
+    const lightbox = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbPrev = document.getElementById("lbPrev");
+    const lbNext = document.getElementById("lbNext");
+    let lbCurrent = 0;
+    if (PHOTOS.length <= 1) { lbPrev.style.display = "none"; lbNext.style.display = "none"; }
+    function renderPhoto() { lbImg.src = PHOTOS[lbCurrent]; }
+    function openLightbox(i) {
+      lbCurrent = i; renderPhoto();
+      lightbox.classList.add("open"); lightbox.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden";
+    }
+    function closeLightbox() {
+      lightbox.classList.remove("open"); lightbox.setAttribute("aria-hidden", "true"); lbImg.src = ""; document.body.style.overflow = "";
+    }
+    function nextPhoto() { lbCurrent = (lbCurrent + 1) % PHOTOS.length; renderPhoto(); }
+    function prevPhoto() { lbCurrent = (lbCurrent - 1 + PHOTOS.length) % PHOTOS.length; renderPhoto(); }
+    lbNext.addEventListener("click", nextPhoto);
+    lbPrev.addEventListener("click", prevPhoto);
+    document.getElementById("lbClose").addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener("keydown", function (e) {
+      if (!lightbox.classList.contains("open")) return;
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowRight" && PHOTOS.length > 1) nextPhoto();
+      else if (e.key === "ArrowLeft" && PHOTOS.length > 1) prevPhoto();
+    });
+
+    // --- Animazione comparsa allo scroll (con fallback di sicurezza) ---
+    const workItems = document.querySelectorAll(".work-item, .photo, .about-text > *");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e, i) {
+          if (e.isIntersecting) {
+            e.target.style.transitionDelay = (i * 60) + "ms";
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      workItems.forEach(function (t) { io.observe(t); });
+    } else {
+      workItems.forEach(function (t) { t.classList.add("in"); }); // niente animazione, ma tutto visibile
+    }
+
+    // --- Modale video (carousel) ---
+    const modal = document.getElementById("modal");
+    const modalStage = document.querySelector(".modal-stage");
+    const modalFrame = document.getElementById("modalFrame");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPrev = document.getElementById("modalPrev");
+    const modalNext = document.getElementById("modalNext");
+    let current = 0;
+
+    // se c'è un solo video, niente frecce
+    if (playable.length <= 1) { modalPrev.style.display = "none"; modalNext.style.display = "none"; }
+
+    function renderVideo() {
+      const v = playable[current];
+      modalTitle.textContent = v.titolo;
+      const src = v.vimeo
+        ? "https://player.vimeo.com/video/" + v.vimeo + "?autoplay=1&title=0&byline=0&portrait=0"
+        : "https://www.youtube.com/embed/" + v.youtube + "?autoplay=1&rel=0&playsinline=1";
+      modalFrame.innerHTML = '<iframe src="' + src +
+        '" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>';
+      modalStage.classList.toggle("vertical", !!v.vertical); // player in piedi per i reel
+    }
+    function openModalAt(i) {
+      current = i; renderVideo();
+      modal.classList.add("open"); modal.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden";
+    }
+    function closeModal() {
+      modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true"); modalFrame.innerHTML = ""; document.body.style.overflow = "";
+    }
+    function nextVideo() { current = (current + 1) % playable.length; renderVideo(); }
+    function prevVideo() { current = (current - 1 + playable.length) % playable.length; renderVideo(); }
+
+    modalNext.addEventListener("click", nextVideo);
+    modalPrev.addEventListener("click", prevVideo);
+    document.getElementById("modalClose").addEventListener("click", closeModal);
+    modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", function (e) {
+      if (!modal.classList.contains("open")) return;
+      if (e.key === "Escape") closeModal();
+      else if (e.key === "ArrowRight" && playable.length > 1) nextVideo();
+      else if (e.key === "ArrowLeft" && playable.length > 1) prevVideo();
+    });
+
+    // --- Sidebar mobile ---
+    const sidebar        = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    function openSidebar() {
+      sidebar.classList.add("open");
+      sidebarOverlay.classList.add("open");
+      hamburger.classList.add("active");
+      hamburger.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+    }
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("open");
+      hamburger.classList.remove("active");
+      hamburger.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
+
+    hamburger.addEventListener("click", function () {
+      sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+    });
+    sidebarOverlay.addEventListener("click", closeSidebar);
+    document.getElementById("sidebarClose").addEventListener("click", closeSidebar);
+    sidebar.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", closeSidebar);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeSidebar();
+    });
+    
+    // --- Form di contatto (Web3Forms) ---
+    const contactForm = document.getElementById("contactForm");
+    const formMsg = document.getElementById("formMsg");
+    const formBtn = document.getElementById("formBtn");
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      formMsg.textContent = I18N[lang]["form.sending"];
+      formBtn.disabled = true;
+      const data = Object.fromEntries(new FormData(contactForm));
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        formMsg.textContent = res.success ? I18N[lang]["form.ok"] : I18N[lang]["form.err"];
+        if (res.success) contactForm.reset();
+      })
+      .catch(function () { formMsg.textContent = I18N[lang]["form.err"]; })
+      .finally(function () { formBtn.disabled = false; });
+    });
+
+    // --- Newsletter (opzionale): attiva solo se i campi esistono nella pagina ---
+    const newsBtn = document.getElementById("newsBtn");
+    if (newsBtn) {
+      newsBtn.addEventListener("click", function () {
+        const email = document.getElementById("newsEmail").value.trim();
+        const msg = document.getElementById("newsMsg");
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        msg.textContent = ok ? I18N[lang]["news.thanks"] : I18N[lang]["news.invalid"];
+        if (ok) document.getElementById("newsEmail").value = "";
+      });
+    }
+
+    // --- Cursore "PLAY" personalizzato sui video (solo desktop con mouse) ---
+    if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
+      const cur = document.createElement("div");
+      cur.id = "cursorPlay";
+      cur.textContent = "PLAY";
+      document.body.appendChild(cur);
+      function moveCur(e) {
+        cur.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px) translate(-50%,-50%)";
+      }
+      document.querySelectorAll(".thumb").forEach(function (t) {
+        if (t.style.cursor === "default") return; // salta i segnaposto senza video
+        t.addEventListener("mouseenter", function () { cur.classList.add("show"); });
+        t.addEventListener("mouseleave", function () { cur.classList.remove("show"); });
+        t.addEventListener("mousemove", moveCur);
+      });
+    }
+
+    // --- Leggero parallax del contenuto hero (rispetta "riduci movimento") ---
+    const heroContent = document.querySelector(".hero-content");
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (heroContent && !reduceMotion) {
+      window.addEventListener("scroll", function () {
+        const y = window.scrollY;
+        if (y <= window.innerHeight) {
+          heroContent.style.transform = "translateY(" + (y * 0.25) + "px)";
+          heroContent.style.opacity = Math.max(0, 1 - (y / (window.innerHeight * 0.85)));
+        }
+      }, { passive: true });
+    }
+
+    // anno footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // applica la lingua iniziale
+    applyLang(lang);
+  </script>
+</body>
+</html>
