@@ -331,19 +331,22 @@
       position: relative; overflow: hidden; text-align: center;
       border: 1px solid var(--line); border-radius: 24px;
       padding: clamp(36px, 6vw, 72px);
-      background:
-        radial-gradient(130% 130% at 0% 0%, rgba(255,255,255,0.07), rgba(255,255,255,0) 55%),
-        linear-gradient(135deg, #141416 0%, #060606 100%);
+      background: linear-gradient(135deg, #141416 0%, #060606 100%); /* fallback se l'immagine manca */
       opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease;
     }
     .prev-card.in { opacity: 1; transform: none; }
+    /* immagine di sfondo + velo scuro per la leggibilità */
+    .prev-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; }
+    .prev-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 100%); }
+    .prev-content { position: relative; z-index: 2; }
     .prev-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.85);
       border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 16px; margin-bottom: 22px;
+      background: rgba(0,0,0,0.25); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
     }
     .prev-title { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; }
-    .prev-desc { color: var(--muted); font-size: clamp(1rem, 2.5vw, 1.15rem); max-width: 560px; margin: 14px auto 32px; }
+    .prev-desc { color: rgba(245,245,247,0.85); font-size: clamp(1rem, 2.5vw, 1.15rem); max-width: 560px; margin: 14px auto 32px; }
     .prev-btn {
       display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 999px;
       background: var(--text); color: #000; font-weight: 600; font-size: 15px; transition: transform .25s ease;
@@ -531,17 +534,37 @@
     <div class="scroll-cue"><span data-i18n="hero.scroll">Scorri</span> ↓</div>
   </section>
 
-    <!-- PREVENTIVI (invito all'area riservata) -->
+  <!-- PREVENTIVI (invito all'area riservata) -->
   <section class="section-pad" id="preventivi-cta">
     <div class="wrap">
       <div class="prev-card">
-        <div class="prev-badge">🔒 <span data-i18n="prev.badge">Area riservata clienti</span></div>
-        <h2 class="prev-title" data-i18n="prev.title">Scarica il tuo preventivo</h2>
-        <p class="prev-desc" data-i18n="prev.desc">Accedi all'area dedicata e inserisci il codice che ti ho fornito per consultare e scaricare il tuo preventivo.</p>
-        <a class="prev-btn" href="preventivi.html"><span data-i18n="prev.cta">Vai ai preventivi</span> →</a>
+        <!-- IMMAGINE DI SFONDO: cambia il file qui sotto.
+             Puoi usare una foto del sito (es. stills/foto4.png) o un link R2. -->
+        <div class="prev-bg" style="background-image: url('stills/foto4.png');"></div>
+        <div class="prev-overlay"></div>
+        <div class="prev-content">
+          <div class="prev-badge">🔒 <span data-i18n="prev.badge">Area riservata clienti</span></div>
+          <h2 class="prev-title" data-i18n="prev.title">Scarica il tuo preventivo</h2>
+          <p class="prev-desc" data-i18n="prev.desc">Accedi all'area dedicata e inserisci il codice che ti ho fornito per consultare e scaricare il tuo preventivo.</p>
+          <a class="prev-btn" href="preventivi.html"><span data-i18n="prev.cta">Vai ai preventivi</span> →</a>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- CLIENTI -->
+  <!--<section class="clients">
+    <div class="wrap">
+      <div class="label" data-i18n="clients.label">Hanno scelto i miei video</div>
+      <div class="client-row">
+        <span>CLIENTE 1</span>
+        <span>CLIENTE 2</span>
+        <span>CLIENTE 3</span>
+        <span>CLIENTE 4</span>
+        <span>CLIENTE 5</span>
+      </div>
+    </div>
+  </section> -->
 
   <!-- MARQUEE (striscia scorrevole) -->
 
@@ -730,15 +753,23 @@
        Lascia youtube: "" se non hai ancora il video.
        ============================================================ */
     
-    const VIDEOS = [
-      { titolo: "JOSHUA AND SHEILA WEDDING",        youtube: "-uUdfGCIZyY" },
-      { titolo: "WHAT IF | MUSIC VIDEO",    youtube: "ylgK3BXCj9Y", cover: "covers/what-if.png"},
-      { titolo: "PARA SIEMPRE | MUSIC VIDEO",       youtube: "KeReHKwHBM4" ,  cover: "covers/para-siempre.png"},
-      { titolo: "DOLOMITES CINEMATIC DRONE SHOT",           youtube: "Fm_--n2eJw4" },
-      { titolo: "KUSINELA RESTAURANT | PROMOTIONAL VIDEO",  youtube: "yKxxIWSEpbI", vertical: true, cover: "covers/kusinela.png"},
-      { titolo: "LUNCH BREAK | SHORT REEL ",       youtube: "Eb0JsQJJ0BQ" },
-    ];
-    /* ▲▲▲  fine elenco video  ▲▲▲ */
+    (async function () {
+    /* ============================================================
+       I contenuti (video, foto) ora arrivano dai file modificabili
+       dal pannello: content/videos.json e content/photos.json.
+       Qui sotto vengono caricati; se un file non si carica, la
+       sezione resta semplicemente vuota (nessun errore bloccante).
+       ============================================================ */
+    let VIDEOS = [], PHOTOS = [];
+    try {
+      const [vData, pData] = await Promise.all([
+        fetch("/content/videos.json", { cache: "no-store" }).then(function (r) { return r.json(); }).catch(function () { return null; }),
+        fetch("/content/photos.json", { cache: "no-store" }).then(function (r) { return r.json(); }).catch(function () { return null; })
+      ]);
+      if (vData && Array.isArray(vData.videos)) VIDEOS = vData.videos;
+      if (pData && Array.isArray(pData.photos)) PHOTOS = pData.photos.map(function (p) { return (p && p.image) ? p.image : p; });
+    } catch (e) { console.error("Errore nel caricamento dei contenuti:", e); }
+    /* ▲▲▲  fine caricamento contenuti  ▲▲▲ */
 
 
     /* ============================================================
@@ -882,11 +913,7 @@
       grid.appendChild(item);
     });
 
-    /* ▼▼▼  ELENCO FOTO  ▼▼▼
-       Metti i file immagine nella cartella del sito e scrivi qui i nomi.
-       Es: "foto1.jpg". Lascia l'elenco vuoto [] se non hai foto. */
-    const PHOTOS = ["stills/foto1.png", "stills/foto2.jpg", "stills/foto3.png", "stills/foto4.png", "stills/foto5.png", "stills/foto6.png"];
-    /* ▲▲▲  fine elenco foto  ▲▲▲ */
+    /* Le foto ora arrivano da content/photos.json (caricate sopra). */
 
     // --- Disegna la galleria foto ---
     const photoGrid = document.getElementById("photoGrid");
@@ -1090,6 +1117,7 @@
 
     // applica la lingua iniziale
     applyLang(lang);
+    })();
   </script>
 </body>
 </html>

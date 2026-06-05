@@ -230,27 +230,18 @@
   </div>
 
   <script>
+    (async function () {
     /* ============================================================
-       ▼▼▼  ELENCO PREVENTIVI  ▼▼▼
-       Per aggiungere un preventivo, copia una riga e modifica i 4 campi:
-
-         nome:        il titolo che vede il cliente nella lista
-         descrizione: una riga di dettaglio (facoltativa, puoi lasciarla "")
-         codice:      il codice che il cliente deve inserire per aprirlo
-         file:        il link diretto al PDF su R2 (media.gersonfilms.com)
-
-       Consiglio: usa codici non banali (es. "rossi-7h3k9", non "1234").
-       I PDF vanno caricati su R2, nella cartella "preventivi/" del bucket.
+       I preventivi ora arrivano dal file modificabile dal pannello:
+       content/preventivi.json. Vengono caricati qui sotto.
        ============================================================ */
-    const PREVENTIVI = [
-      {
-        nome: "Denzel & Princess",
-        descrizione: "Pacchetto video matrimonio · Aprile 24, 2027",
-        codice: "24042027",
-        file: "https://media.gersonfilms.com/Denzel%26Princess.pdf"
-      }
-    ];
-    /* ▲▲▲  fine elenco preventivi  ▲▲▲ */
+    let PREVENTIVI = [];
+    try {
+      const data = await fetch("/content/preventivi.json", { cache: "no-store" })
+        .then(function (r) { return r.json(); }).catch(function () { return null; });
+      if (data && Array.isArray(data.preventivi)) PREVENTIVI = data.preventivi;
+    } catch (e) { console.error("Errore nel caricamento dei preventivi:", e); }
+    /* ▲▲▲  fine caricamento preventivi  ▲▲▲ */
 
 
     /* ============================================================
@@ -386,6 +377,7 @@
 
     // applica la lingua iniziale (traduce anche le righe appena generate)
     applyLang(lang);
+    })();
 
     // --- Menu mobile (hamburger + sidebar) ---
     const hamburger = document.getElementById("hamburger");

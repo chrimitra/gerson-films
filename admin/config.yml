@@ -1,0 +1,74 @@
+# ============================================================
+#  CONFIGURAZIONE PANNELLO (Sveltia CMS)
+#  ►► DA COMPLETARE prima dell'uso (2 righe segnate con <-- ):
+#     - repo:     il tuo repository GitHub  (formato:  utente/nome-repo)
+#     - base_url: l'indirizzo del Worker di autenticazione (vedi istruzioni)
+# ============================================================
+
+backend:
+  name: github
+  repo: chrimitra/gerson-films     # <-- METTI QUI utente/nome-repo
+  branch: main
+  base_url: https://sveltia-cms-auth.gersonfilms.workers.dev/ # <-- METTI QUI l'URL del Worker auth
+
+# Dove vengono salvati i file caricati (foto, PDF) dentro al repository
+media_folder: "uploads"
+public_folder: "/uploads"
+
+# Lingua del pannello
+locale: it
+
+collections:
+  # ---------- VIDEO / LAVORI ----------
+  - name: videos
+    label: "Video / Lavori"
+    files:
+      - name: list
+        label: "Elenco video"
+        file: "content/videos.json"
+        fields:
+          - name: videos
+            label: "Video"
+            label_singular: "Video"
+            widget: list
+            summary: "{{fields.titolo}}"
+            fields:
+              - { name: titolo, label: "Titolo", widget: string }
+              - { name: youtube, label: "Codice YouTube", widget: string, required: false, hint: "Solo la parte dopo v= o youtu.be/  (es. dQw4w9WgXcQ)" }
+              - { name: vimeo, label: "Codice Vimeo", widget: string, required: false, hint: "Solo il numero del video Vimeo (lascia vuoto se usi YouTube)" }
+              - { name: vertical, label: "Verticale (reel 9:16)", widget: boolean, default: false }
+              - { name: cover, label: "Copertina (immagine, facoltativa)", widget: image, required: false }
+
+  # ---------- FOTO ----------
+  - name: photos
+    label: "Foto"
+    files:
+      - name: list
+        label: "Galleria foto"
+        file: "content/photos.json"
+        fields:
+          - name: photos
+            label: "Foto"
+            label_singular: "Foto"
+            widget: list
+            fields:
+              - { name: image, label: "Immagine", widget: image }
+
+  # ---------- PREVENTIVI ----------
+  - name: preventivi
+    label: "Preventivi"
+    files:
+      - name: list
+        label: "Elenco preventivi"
+        file: "content/preventivi.json"
+        fields:
+          - name: preventivi
+            label: "Preventivi"
+            label_singular: "Preventivo"
+            widget: list
+            summary: "{{fields.nome}}"
+            fields:
+              - { name: nome, label: "Nome (visibile al cliente)", widget: string }
+              - { name: descrizione, label: "Descrizione", widget: string, required: false }
+              - { name: codice, label: "Codice di accesso", widget: string, hint: "Il codice che il cliente deve inserire per aprire il PDF" }
+              - { name: file, label: "PDF del preventivo", widget: file }

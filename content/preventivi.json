@@ -1,0 +1,16 @@
+{
+  "preventivi": [
+    {
+      "nome": "Matrimonio — Rossi",
+      "descrizione": "Pacchetto video matrimonio · Giugno 2026",
+      "codice": "rossi-2026",
+      "file": "https://media.gersonfilms.com/preventivi/matrimonio-rossi.pdf"
+    },
+    {
+      "nome": "Spot — Bar Centrale",
+      "descrizione": "Video promozionale 30s + reel social",
+      "codice": "barcentrale-2026",
+      "file": "https://media.gersonfilms.com/preventivi/spot-bar-centrale.pdf"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "videos": [
+    { "titolo": "JOSHUA AND SHEILA WEDDING", "youtube": "-uUdfGCIZyY", "vimeo": "", "vertical": false, "cover": "" },
+    { "titolo": "WHAT IF | MUSIC VIDEO", "youtube": "ylgK3BXCj9Y", "vimeo": "", "vertical": false, "cover": "covers/what-if.png" },
+    { "titolo": "PARA SIEMPRE | MUSIC VIDEO", "youtube": "KeReHKwHBM4", "vimeo": "", "vertical": false, "cover": "covers/para-siempre.png" },
+    { "titolo": "DOLOMITES CINEMATIC DRONE SHOT", "youtube": "Fm_--n2eJw4", "vimeo": "", "vertical": false, "cover": "" },
+    { "titolo": "KUSINELA RESTAURANT | PROMOTIONAL VIDEO", "youtube": "yKxxIWSEpbI", "vimeo": "", "vertical": true, "cover": "covers/kusinela.png" },
+    { "titolo": "LUNCH BREAK | SHORT REEL", "youtube": "Eb0JsQJJ0BQ", "vimeo": "", "vertical": false, "cover": "" }
+  ]
+}

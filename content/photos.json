@@ -1,0 +1,10 @@
+{
+  "photos": [
+    { "image": "stills/foto1.png" },
+    { "image": "stills/foto2.jpg" },
+    { "image": "stills/foto3.png" },
+    { "image": "stills/foto4.png" },
+    { "image": "stills/foto5.png" },
+    { "image": "stills/foto6.png" }
+  ]
+}
