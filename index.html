@@ -325,6 +325,32 @@
     .form-msg { color: var(--muted); font-size: 14px; min-height: 18px; }
 
     /* ========================================================
+       PREVENTIVI — card invito (area riservata)
+       ======================================================== */
+    .prev-card {
+      position: relative; overflow: hidden; text-align: center;
+      border: 1px solid var(--line); border-radius: 24px;
+      padding: clamp(36px, 6vw, 72px);
+      background:
+        radial-gradient(130% 130% at 0% 0%, rgba(255,255,255,0.07), rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #141416 0%, #060606 100%);
+      opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease;
+    }
+    .prev-card.in { opacity: 1; transform: none; }
+    .prev-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+      border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 16px; margin-bottom: 22px;
+    }
+    .prev-title { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; }
+    .prev-desc { color: var(--muted); font-size: clamp(1rem, 2.5vw, 1.15rem); max-width: 560px; margin: 14px auto 32px; }
+    .prev-btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 999px;
+      background: var(--text); color: #000; font-weight: 600; font-size: 15px; transition: transform .25s ease;
+    }
+    .prev-btn:hover { transform: scale(1.04); }
+
+    /* ========================================================
        GALLERIA FOTO + LIGHTBOX IMMAGINI
        ======================================================== */
     .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; }
@@ -435,7 +461,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
-    .work-item, .photo, .about-text > * { opacity: 1; transform: none; }
+    .work-item, .photo, .about-text > *, .prev-card { opacity: 1; transform: none; }
   }
   </style>
 </head>
@@ -457,6 +483,7 @@
         <nav class="nav-links" id="navLinks">
           <a href="#top" data-i18n="nav.home">Home</a>
           <a href="#servizi" data-i18n="nav.services">Servizi</a>
+          <a href="preventivi.html" data-i18n="nav.quotes">Preventivi</a>
           <a href="#contatti" data-i18n="nav.contact">Contatti</a>
         </nav>
         <!-- PULSANTE LINGUA -->
@@ -475,6 +502,7 @@
     <div class="sidebar-links">
       <a href="#top"      data-i18n="nav.home">Home</a>
       <a href="#servizi"  data-i18n="nav.services">Servizi</a>
+      <a href="preventivi.html" data-i18n="nav.quotes">Preventivi</a>
       <a href="#contatti" data-i18n="nav.contact">Contatti</a>
     </div>
     <div class="sidebar-footer">GERSON FILMS</div>
@@ -503,19 +531,17 @@
     <div class="scroll-cue"><span data-i18n="hero.scroll">Scorri</span> ↓</div>
   </section>
 
-  <!-- CLIENTI -->
-  <!--<section class="clients">
+    <!-- PREVENTIVI (invito all'area riservata) -->
+  <section class="section-pad" id="preventivi-cta">
     <div class="wrap">
-      <div class="label" data-i18n="clients.label">Hanno scelto i miei video</div>
-      <div class="client-row">
-        <span>CLIENTE 1</span>
-        <span>CLIENTE 2</span>
-        <span>CLIENTE 3</span>
-        <span>CLIENTE 4</span>
-        <span>CLIENTE 5</span>
+      <div class="prev-card">
+        <div class="prev-badge">🔒 <span data-i18n="prev.badge">Area riservata clienti</span></div>
+        <h2 class="prev-title" data-i18n="prev.title">Scarica il tuo preventivo</h2>
+        <p class="prev-desc" data-i18n="prev.desc">Accedi all'area dedicata e inserisci il codice che ti ho fornito per consultare e scaricare il tuo preventivo.</p>
+        <a class="prev-btn" href="preventivi.html"><span data-i18n="prev.cta">Vai ai preventivi</span> →</a>
       </div>
     </div>
-  </section> -->
+  </section>
 
   <!-- MARQUEE (striscia scorrevole) -->
 
@@ -721,7 +747,7 @@
        ============================================================ */
     const I18N = {
       it: {
-        "nav.home": "Home", "nav.work": "Lavori", "nav.services": "Servizi", "nav.contact": "Contatti",
+        "nav.home": "Home", "nav.work": "Lavori", "nav.services": "Servizi", "nav.quotes": "Preventivi", "nav.contact": "Contatti",
         "hero.sub": "Filmmaker — Based in Milan, Italy", "hero.cta": "Guarda i lavori", "hero.scroll": "Scorri",
         "clients.label": "Hanno scelto i miei video",
         "work.label": "Motion", "work.title": "Lavori", "work.desc": "Una selezione di film, spot e video musicali.",
@@ -740,6 +766,7 @@
         "contact.title": "Contatti", "contact.desc": "Hai un progetto in mente? Scrivimi.",
         "contact.k1": "Lavoro / Collaborazioni", "contact.k2": "Social", "contact.k3": "Base", "contact.base": "Milano — Worldwide",
         "git.title": "Mettiti in contatto", "git.desc": "Non esitare a scrivermi, se vuoi lavorare insieme o per qualsiasi domanda.", "git.support": "Supporto", "git.business": "Lavoro",
+        "prev.badge": "Area riservata clienti", "prev.title": "Scarica il tuo preventivo!", "prev.desc": "Accedi all'area dedicata e inserisci il codice che ti ho fornito per consultare e scaricare il tuo preventivo.", "prev.cta": "Vai ai preventivi",
         "form.name": "Nome", "form.email": "Email", "form.message": "Il tuo messaggio", "form.send": "Invia",
         "form.sending": "Invio in corso…", "form.ok": "Messaggio inviato, grazie!", "form.err": "Qualcosa è andato storto. Riprova o scrivimi via email.",
         "foot.contact": "Contatti", "foot.links": "Link", "foot.legal": "Legale",
@@ -749,7 +776,7 @@
         "foot.rights": "Tutti i diritti riservati"
       },
       en: {
-        "nav.home": "Home", "nav.work": "Work", "nav.services": "Services", "nav.contact": "Contact",
+        "nav.home": "Home", "nav.work": "Work", "nav.services": "Services", "nav.quotes": "Quotes", "nav.contact": "Contact",
         "hero.sub": "Filmmaker — Based in Milan, Italy", "hero.cta": "View work", "hero.scroll": "Scroll",
         "clients.label": "Trusted by",
         "work.label": "Motion", "work.title": "Work", "work.desc": "A selection of films, commercials and music videos.",
@@ -768,6 +795,7 @@
         "contact.title": "Contact", "contact.desc": "Got a project in mind? Get in touch.",
         "contact.k1": "Business / Collaborations", "contact.k2": "Social", "contact.k3": "Based in", "contact.base": "Milan — Worldwide",
         "git.title": "Get in touch", "git.desc": "Don't hesitate to reach out, if you'd like to work together or if you have any other questions.", "git.support": "Support", "git.business": "Business",
+        "prev.badge": "Clients area", "prev.title": "Get your quote!", "prev.desc": "Enter the dedicated area and use the code I gave you to view and download your quote.", "prev.cta": "Go to quotes",
         "form.name": "Name", "form.email": "Email", "form.message": "Your message", "form.send": "Send",
         "form.sending": "Sending…", "form.ok": "Message sent, thank you!", "form.err": "Something went wrong. Please try again or email me.",
         "foot.contact": "Contact", "foot.links": "Links", "foot.legal": "Legal",
@@ -781,9 +809,10 @@
 
 
     // --- Sistema lingua ---
-    let lang = "it"; // lingua iniziale
+    let lang = (function () { try { return localStorage.getItem("gf_lang") || "it"; } catch (e) { return "it"; } })(); // lingua iniziale (ricordata tra le pagine)
     function applyLang(l) {
       lang = l;
+      try { localStorage.setItem("gf_lang", l); } catch (e) {}
       document.documentElement.lang = l;
       // testi
       document.querySelectorAll("[data-i18n]").forEach(function (el) {
@@ -901,7 +930,7 @@
     });
 
     // --- Animazione comparsa allo scroll (con fallback di sicurezza) ---
-    const workItems = document.querySelectorAll(".work-item, .photo, .about-text > *");
+    const workItems = document.querySelectorAll(".work-item, .photo, .about-text > *, .prev-card");
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e, i) {
