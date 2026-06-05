@@ -287,6 +287,7 @@
     .news-row button:hover { transform: scale(1.04); }
     .news-msg { color: var(--muted); font-size: 13px; margin-top: 10px; min-height: 16px; }
     .foot-bottom { margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: var(--muted); font-size: 13px; }
+    .foot-credit { letter-spacing: 0.02em; opacity: 0.85; }
 
     /* ABOUT con ritratto (stile pagina contatti del riferimento) */
     .about-grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: center; }
@@ -331,12 +332,19 @@
       position: relative; overflow: hidden; text-align: center;
       border: 1px solid var(--line); border-radius: 24px;
       padding: clamp(36px, 6vw, 72px);
+      /* ►► ALTEZZA della card: aumenta/diminuisci questo valore per mostrare
+            più o meno foto (es. 320px, 420px, 520px). Togli la riga per
+            tornare all'altezza automatica in base al testo. */
+      min-height: 380px;
+      display: flex; align-items: center; justify-content: center;
       background: linear-gradient(135deg, #141416 0%, #060606 100%); /* fallback se l'immagine manca */
       opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease;
     }
     .prev-card.in { opacity: 1; transform: none; }
     /* immagine di sfondo + velo scuro per la leggibilità */
-    .prev-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; }
+    /* ►► POSIZIONE della foto: il secondo valore sposta su/giù la parte visibile.
+          0% = mostra l'alto · 50% = centro · 100% = mostra il basso (es. "center 30%"). */
+    .prev-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center 0%; }
     .prev-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 100%); }
     .prev-content { position: relative; z-index: 2; }
     .prev-badge {
@@ -540,7 +548,7 @@
       <div class="prev-card">
         <!-- IMMAGINE DI SFONDO: cambia il file qui sotto.
              Puoi usare una foto del sito (es. stills/foto4.png) o un link R2. -->
-        <div class="prev-bg" style="background-image: url('stills/foto4.png');"></div>
+        <div class="prev-bg" style="background-image: url('preventivi-hero.png');"></div>
         <div class="prev-overlay"></div>
         <div class="prev-content">
           <div class="prev-badge">🔒 <span data-i18n="prev.badge">Area riservata clienti</span></div>
@@ -694,6 +702,7 @@
       <div class="foot-bottom">
         <span>© <span id="year"></span> GERSON FILMS</span>
         <span data-i18n="foot.rights">Tutti i diritti riservati</span>
+        <span class="foot-credit">Designed by @chrimitra</span>
       </div>
     </div>
   </footer>
