@@ -1,6 +1,12 @@
 {
   "preventivi": [
     {
+      "nome": "A&M",
+      "descrizione": "Preventivo video fuori sede · giugno 2026",
+      "codice": "angelikamark.",
+      "file": "/uploads/Angelika Mark.pdf"
+    },
+    {
       "nome": "D&P",
       "descrizione": "Pacchetto video matrimonio · Aprile 2027",
       "codice": "24042027",
@@ -20,7 +26,7 @@
     },
     {
       "nome": "Wedding services 2026/2027",
-      "descrizione": "Prevenitivo video fuori sede · giugno 2026",
+      "descrizione": "Preventivo video fuori sede · giugno 2026",
       "codice": "20262027",
       "file": "/uploads/Aggiungi un titolo.pdf"
     }
